@@ -6,8 +6,7 @@
 #define QTPYBRIDGE_PYTHONINVOKER_H
 
 #include <QObject>
-#include "../IPC/DataFrame.h"
-#include <QUuid>
+#include "../IPC/Session.h"
 
 namespace QPB {
     class PythonIO;
@@ -20,8 +19,6 @@ namespace QPB {
         static inline const QString ErrCode = "errCode";
         static inline const QString ErrMsg = "errMsg";
 
-        explicit PythonInvoker();
-
         enum State {
             Idle,
             Running,
@@ -33,9 +30,10 @@ namespace QPB {
         enum ErrorCode {
             NoError,
             Timeout,
-            IPCError,
-            UserError = 10000
+            ParseError,
         };
+
+        explicit PythonInvoker(Session::Ptr session);
 
         State state() const;
 
@@ -43,21 +41,19 @@ namespace QPB {
 
         void cancel();
 
-        virtual void execute(PythonIO *io);
+        virtual void invoke() = 0;
 
     signals:
         void stateChanged(State state);
 
         void errorOccurred(int errCode, const QString &errMsg);
 
-        void msgReceived(const QString &msg);
-
     protected:
-        virtual void toJson(QJsonObject &json) const = 0;
-
-    private:
         int m_timeout = 3000;
-        QUuid m_id;
+        Session::Ptr m_session;
+
+    protected slots:
+        virtual void onDataReceived(DataFrame::ConstPtr frame);
     };
 } // QPB
 

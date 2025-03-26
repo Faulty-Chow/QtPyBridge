@@ -5,8 +5,9 @@
 #ifndef QTPYBRIDGE_DATAFRAME_H
 #define QTPYBRIDGE_DATAFRAME_H
 
-#include <QtGlobal>
+#include <QBuffer>
 #include <QByteArray>
+#include <QUuid>
 
 namespace QPB {
     class DataFrame {
@@ -26,28 +27,27 @@ namespace QPB {
             Exception,
         };
 
-        struct Header {
-            quint16 magic = MAGIC;
-            quint8 version = VERSION;
-            quint8 type;
-            quint32 length;
-            quint16 reserve = 0;
-        };
+        DataFrame(QUuid id = QUuid::createUuid());
 
-        DataFrame(quint8 type, const QByteArray &data = QByteArray());
+        static int fromPacket(QBuffer &buffer, DataFrame &frame);
 
-        QByteArray toBytes() const;
+        QByteArray toPacket() const;
 
         quint8 type() const;
 
+        QUuid id() const;
+
         QByteArray data() const;
+
+        void setType(Type type);
 
         void setData(const QByteArray &data);
 
-        bool isValid() const;
+        QString toString() const;
 
     private:
-        Header m_header;
+        QUuid m_id;
+        int m_type{-1};
         QByteArray m_data;
     };
 } // QPB

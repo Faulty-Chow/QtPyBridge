@@ -46,9 +46,16 @@ void TcpSocket::close() {
     m_socket->close();
 }
 
-bool TcpSocket::write(const DataFrame &frame) {
-    QByteArray packet = frame.toBytes();
-    return m_socket->write(packet) == packet.size();
+bool TcpSocket::write(DataFrame::ConstPtr frame) {
+    QByteArray packet = frame->toBytes();
+    if (m_socket->write(packet) != packet.size())
+        return false;
+    m_socket->flush();
+    return true;
+}
+
+QString TcpSocket::errorString() const {
+    return m_socket->errorString();
 }
 
 void TcpSocket::onReadyRead() {
@@ -58,26 +65,13 @@ void TcpSocket::onReadyRead() {
             break;
         }
 
-        QDataStream stream(&m_buffer, QIODevice::ReadOnly);
-        stream.setByteOrder(QDataStream::BigEndian);
-
         DataFrame::Header header;
-        stream >> header.magic >> header.version;
-        if (header.magic != DataFrame::MAGIC || header.version != DataFrame::VERSION) {
-            m_buffer.remove(0, 1);
-            continue;
-        }
-        stream >> header.type >> header.length >> header.reserve;
-
-        const quint32 totalPacketSize = sizeof(DataFrame::Header) + header.length;
-        if (m_buffer.size() < totalPacketSize) {
+        memcpy(&header, m_buffer.constData(), sizeof(DataFrame::Header));
+        if (m_buffer.size() - sizeof(DataFrame::Header) < header.length) {
             break;
         }
 
-        QByteArray packet = m_buffer.left(totalPacketSize);
-        m_buffer.remove(0, totalPacketSize);
-
-        DataFrame frame(packet);
+        auto frame = std::make_shared<DataFrame>(m_buffer.left(sizeof(DataFrame::Header) + header.length));
         emit frameReady(frame);
     }
 }

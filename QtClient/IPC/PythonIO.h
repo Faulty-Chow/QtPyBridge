@@ -6,23 +6,17 @@
 #define QTPYBRIDGE_PYTHONIO_H
 
 #include <QObject>
-#include "../IPC/DataFrame.h"
+#include "Session.h"
+#include <QBuffer>
 
 namespace QPB {
     class PythonIO : public QObject {
-        Q_OBJECT
+    Q_OBJECT
 
     public:
-        enum State {
+        enum ErrorCode {
+            NoError,
         };
-
-        enum Attribute {
-            Host,
-            Port,
-            Timeout,
-        };
-
-        virtual bool set(Attribute attribute, const QVariant &data) = 0;
 
         virtual void open() = 0;
 
@@ -32,16 +26,30 @@ namespace QPB {
 
         virtual void close() = 0;
 
-        virtual bool write(const DataFrame &frame) = 0;
+        Session::Ptr createSession();
+
+        bool send(DataFrame::ConstPtr frame);
+
+        DataFrame::ConstPtr waitForFrame(int msecs);
+
+        virtual QString errorString() const = 0;
 
     signals:
-        void frameReady(DataFrame::ConstPtr frame);
-
         void connected();
 
         void disconnected();
 
-        void errorOccurred(int error);
+        void errorOccurred(int errCode, QString errMsg = QString());
+
+        void frameReceived(DataFrame::ConstPtr frame);
+
+    protected:
+        virtual int write(const QByteArray& data) = 0;
+
+        int read(const QByteArray& data);
+
+    private:
+        QByteArray m_wBuffer, m_rBuffer;
     };
 } // QPB
 

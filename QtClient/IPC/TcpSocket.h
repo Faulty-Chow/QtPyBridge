@@ -16,8 +16,6 @@ namespace QPB {
     public:
         TcpSocket(QObject *parent = nullptr);
 
-        bool set(Attribute attribute, const QVariant &data) override;
-
         void open() override;
 
         bool waitForConnected(int msecs) override;
@@ -26,7 +24,9 @@ namespace QPB {
 
         void close() override;
 
-        bool write(const DataFrame &frame) override;
+        bool write(DataFrame::ConstPtr frame) override;
+
+        QString errorString() const override;
 
     private slots:
         void onReadyRead();
