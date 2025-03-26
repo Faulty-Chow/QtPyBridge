@@ -10,9 +10,8 @@
 class QTcpSocket;
 
 namespace QPB {
-
     class TcpSocket : public PythonIO {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         TcpSocket(QObject *parent = nullptr);
@@ -39,7 +38,6 @@ namespace QPB {
         QString m_host;
         quint16 m_port;
     };
-
 } // QPB
 
 #endif //QTPYBRIDGE_TCPSOCKET_H

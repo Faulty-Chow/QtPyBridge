@@ -35,5 +35,10 @@ bool PythonProcessPrivate::start() {
 PythonInvoker *PythonProcessPrivate::invoke() {
     PythonInvoker *invoker;
 
-    QObject::connect(invoker, &PythonInvoker::stateChanged, m_thread, &PythonThread::stateChanged);
+    QObject::connect(invoker, &PythonInvoker::stateChanged, m_thread,
+    [invoker](PythonInvoker::State state) {
+        if (PythonInvoker::Idle == state) {
+            m_thread->invoke(invoker);
+        }
+    });
 }

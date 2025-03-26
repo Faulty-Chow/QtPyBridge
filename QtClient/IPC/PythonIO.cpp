@@ -4,5 +4,4 @@
 
 #include "PythonIO.h"
 
-namespace QPB {
-} // QPB
+using namespace QPB;

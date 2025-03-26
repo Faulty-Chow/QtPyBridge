@@ -10,19 +10,17 @@
 class QProcess;
 
 namespace QPB {
-
     class PythonThread;
 
     class PythonProcessPrivate {
     public:
-
         void setState(PythonProcess::State state);
 
         bool start();
 
         void stop();
 
-        PythonInvoker* invoke();
+        PythonInvoker *invoke();
 
     private:
         PythonProcess *m_q;
@@ -33,7 +31,6 @@ namespace QPB {
         QProcess *m_process;
         PythonThread *m_thread;
     };
-
 } // QPB
 
 #endif //QTPYBRIDGE_PYTHONPROCESSPRIVATE_H

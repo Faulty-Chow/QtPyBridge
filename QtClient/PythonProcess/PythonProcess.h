@@ -8,11 +8,10 @@
 #include <QObject>
 
 namespace QPB {
-
     class PythonInvoker;
 
     class PythonProcess : public QObject {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit PythonProcess(QObject *parent = nullptr);
@@ -38,13 +37,10 @@ namespace QPB {
 
         void stop();
 
-        PythonInvoker* invoke();
+        PythonInvoker *invoke();
 
     signals:
-
         void stateChanged(State state);
-
-
     };
 } // QPB
 

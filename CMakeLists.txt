@@ -22,13 +22,23 @@ find_package(Qt6 REQUIRED COMPONENTS
 qt_standard_project_setup()
 
 set(SOURCES
-        QtClient/QPythonProcess.cpp
-        QtClient/QPythonInvoker.cpp
+        QtClient/IPC/DataFrame.cpp
+        QtClient/IPC/PythonIO.cpp
+        QtClient/IPC/TcpSocket.cpp
+        QtClient/PythonProcess/PythonInvoker.cpp
+        QtClient/PythonProcess/PythonProcess.cpp
+        QtClient/PythonProcess/PythonProcessPrivate.cpp
+        QtClient/PythonProcess/PythonThread.cpp
 )
 
 set(HEADERS
-        QtClient/QPythonProcess.h
-        QtClient/QPythonInvoker.h
+        QtClient/IPC/DataFrame.h
+        QtClient/IPC/PythonIO.h
+        QtClient/IPC/TcpSocket.h
+        QtClient/PythonProcess/PythonInvoker.h
+        QtClient/PythonProcess/PythonProcess.h
+        QtClient/PythonProcess/PythonProcessPrivate.h
+        QtClient/PythonProcess/PythonThread.h
 )
 
 add_library(${PROJECT_NAME}

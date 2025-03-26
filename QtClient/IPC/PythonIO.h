@@ -6,25 +6,20 @@
 #define QTPYBRIDGE_PYTHONIO_H
 
 #include <QObject>
-#include "../DataFrame.h"
+#include "../IPC/DataFrame.h"
 
 namespace QPB {
-
     class PythonIO : public QObject {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         enum State {
-
         };
 
         enum Attribute {
             Host,
             Port,
             Timeout,
-            BufferSize,
-            MaxRetry,
-            RetryInterval,
         };
 
         virtual bool set(Attribute attribute, const QVariant &data) = 0;
@@ -40,18 +35,14 @@ namespace QPB {
         virtual bool write(const DataFrame &frame) = 0;
 
     signals:
-
-        void frameReady(const DataFrame &frame);
+        void frameReady(DataFrame::ConstPtr frame);
 
         void connected();
 
         void disconnected();
 
         void errorOccurred(int error);
-
-
     };
-
 } // QPB
 
 #endif //QTPYBRIDGE_PYTHONIO_H

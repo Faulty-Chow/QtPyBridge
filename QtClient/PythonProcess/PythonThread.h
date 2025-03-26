@@ -14,7 +14,6 @@ class QLocalSocket;
 class QTcpSocket;
 
 namespace QPB {
-
     class PythonProcessPrivate;
 
     class PythonInvoker;
@@ -27,18 +26,16 @@ namespace QPB {
 
         void run() override;
 
-    public slots:
-
         void invoke(PythonInvoker *invoker);
 
     signals:
-
         void frameReady(const DataFrame &frame);
+
+        void invoked(PythonInvoker *invoker);
 
     private:
         PythonProcessPrivate *m_p;
     };
-
 } // QPB
 
 #endif //QTPYBRIDGE_PYTHONTHREAD_H

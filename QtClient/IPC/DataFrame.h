@@ -9,9 +9,11 @@
 #include <QByteArray>
 
 namespace QPB {
-
     class DataFrame {
     public:
+        using Ptr = std::shared_ptr<DataFrame>;
+        using ConstPtr = std::shared_ptr<const DataFrame>;
+
         static inline const quint16 MAGIC = 0xCC77;
         static inline const quint8 VERSION = 0x10;
 
@@ -34,8 +36,6 @@ namespace QPB {
 
         DataFrame(quint8 type, const QByteArray &data = QByteArray());
 
-        DataFrame(const QByteArray &rawData, quint16 magic = 0x55AA, quint8 version = 0x10);
-
         QByteArray toBytes() const;
 
         quint8 type() const;
@@ -50,7 +50,6 @@ namespace QPB {
         Header m_header;
         QByteArray m_data;
     };
-
 } // QPB
 
 #endif //QTPYBRIDGE_DATAFRAME_H
